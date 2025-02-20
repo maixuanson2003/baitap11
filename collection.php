@@ -105,6 +105,20 @@ class Collection{
         return collect($result);
 
     }
+    public function merge($collection)
+    {
+        if(array_keys($collection) !== range(0, count($collection) - 1)){
+            foreach($collection as $key=>$item){
+                $this->items[$key] = $item;
+            }
+            return new collection($this->items);
+        }
+        foreach ($collection as $item){
+            $this->items[] = $item;
+        }
+        return new collection($this->items);
+
+    }
     public function mapSpread(callable $func)
     {
 
@@ -199,37 +213,37 @@ class Collection{
 function collect(array $items): Collection {
     return new Collection($items);
 }
-//$item=collect(["name","age"]);
-//$collection=$item->combine(["son",20]);
-//echo $collection->All();
-//
-//// 8
-//
-//// null
-//print_r($collection->All());
-//$collection = collect([
-//    [
-//        'name' => 'John',
-//        'department' => 'Sales',
-//        'email' => 'john@example.com',
-//    ],
-//    [
-//        'name' => 'Jane',
-//        'department' => 'Marketing',
-//        'email' => 'jane@example.com',
-//    ]
-//]);
-//
-//$keyed = $collection->mapWithKeys(function (array $item, int $key) {
-//    return [$item['department'] => $item['email']];
-//});
-//$median = collect([
-//    ['foo' => 10],
-//    ['foo' => 10],
-//    ['foo' => 20],
-//    ['foo' => 40]
-//])->median('foo');
-//echo $median;
+$item=collect(["name","age"]);
+$collection=$item->combine(["son",20]);
+echo $collection->All();
+
+// 8
+
+// null
+print_r($collection->All());
+$collection = collect([
+    [
+        'name' => 'John',
+        'department' => 'Sales',
+        'email' => 'john@example.com',
+    ],
+    [
+        'name' => 'Jane',
+        'department' => 'Marketing',
+        'email' => 'jane@example.com',
+    ]
+]);
+
+$keyed = $collection->mapWithKeys(function (array $item, int $key) {
+    return [$item['department'] => $item['email']];
+});
+$median = collect([
+    ['foo' => 10],
+    ['foo' => 10],
+    ['foo' => 20],
+    ['foo' => 40]
+])->median('foo');
+echo $median;
 echo collect([1, 2,1, 3, 4])->last(function (int $value, int $key) {
     return $value < 3;
 });
@@ -242,5 +256,19 @@ $collection = collect([
 $filtered = $collection->whereNull('name');
 
 print_r($filtered->all());
+echo ".<br>";
+echo ".<br>";
+echo ".<br>";
+echo ".<br>";
+$collection = collect(['product_id' => 1, 'price' => 100]);
+
+$merged = $collection->merge(['price' => 200, 'discount' => "no"]);
+
+print_r($merged->all());
+$collection = collect(['Desk', 'Chair']);
+
+$merged = $collection->merge(['Bookcase', 'Door']);
+
+print_r($merged->all());
 
 ?>

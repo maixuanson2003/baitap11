@@ -26,7 +26,7 @@ class User {
 
     private function setPassword($password) {
         if (strlen($password) < 6) {
-            throw new Exception("Password must be at least 6 characters long.");
+            throw new Exception("Password phai lon hon 6");
         }
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
@@ -36,21 +36,21 @@ class User {
     }
 
     public function __destruct() {
-        echo "User {$this->name} is being destroyed.\n";
+        echo "destruct is call.\n";
     }
 }
 
-// Bài Tập 2: Xây dựng hệ thống quản lý động vật
+// bai 2
 abstract class Animal {
     abstract public function makeSound();
 }
 
 trait Movable {
     public function walk() {
-        echo get_called_class() . " is walking.\n";
+        echo  " is walking.\n";
     }
     public function fly() {
-        echo get_called_class() . " is flying.\n";
+        echo " is flying.\n";
     }
 }
 
@@ -75,7 +75,7 @@ class Bird extends Animal {
     }
 }
 
-// Bài Tập 3: Tạo ứng dụng quản lý thư viện
+// bai 3
 interface Borrowable {
     public function borrow();
     public function returnItem();
@@ -111,11 +111,20 @@ class FileHandler {
     }
 
     public function __call($name, $arguments) {
+
         if ($name === 'readTxt') {
-            return file_get_contents($this->filePath);
+            $myfile = fopen($this->filePath, "r") or die("Unable to open file!");
+            $content="";
+            while(!feof($myfile)) {
+                $content =fgets($myfile) . "<br>";
+            }
+            return  $content;
         } elseif ($name === 'writeTxt') {
-            file_put_contents($this->filePath, $arguments[0]);
+            $myfile = fopen($this->filePath, "w") or die("Unable to open file!");
+            fwrite($myfile, $arguments[0]);
+            fclose($myfile);
         }
+
     }
 
     public function __invoke() {
@@ -126,3 +135,9 @@ class FileHandler {
         return "FileHandler managing: " . $this->filePath;
     }
 }
+$fileHandler = new FileHandler("son.txt");
+$fileHandler->writeTxt("Hello, this is a test!");
+echo $fileHandler->readTxt();
+echo $fileHandler();
+echo $fileHandler;
+
